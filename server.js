@@ -6,6 +6,8 @@ const app = express()
 const server = http.createServer(app)
 const io = socketIO(server)
 
+const db = require('./models/model');
+
 const users = []
 const connections = []
 
@@ -27,7 +29,9 @@ io.on('connection', socket => {
   console.log('connected: %s sockets connected', connections.length)
 
   socket.on('send message', msg => {
-    console.log(msg)
+
+    db.storeMessage(msg)
+    console.log('Message:', msg)
     io.emit('new message', msg)
   })
 

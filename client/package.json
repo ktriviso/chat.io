@@ -11,6 +11,7 @@
     "lodash": "^4.17.4",
     "masonry-layout": "^4.2.0",
     "particles.js": "^2.0.0",
+    "pg-promise": "^8.4.4",
     "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
