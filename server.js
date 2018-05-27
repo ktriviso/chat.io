@@ -28,9 +28,9 @@ io.on('connection', socket => {
   connections.push(socket)
   console.log('connected: %s sockets connected', connections.length)
 
-  socket.on('send message', msg => {
+  socket.on('send message', async (msg) => {
 
-    db.storeMessage(msg)
+    await db.storeMessage(msg)
     console.log('Message:', msg)
     io.emit('new message', msg)
   })
