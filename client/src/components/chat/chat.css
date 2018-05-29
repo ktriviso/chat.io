@@ -1,43 +1,71 @@
 .chat_component {
-  height: 65vh;
-  width: 47vw;
+  height: 70vh;
+  width: 60vw;
   display: block;
   margin: auto;
   background-color: rgba(255,255,255,.5);
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: absolute;
-  top: 15%;
-  left: 50%;
+  justify-content: space-between;
+  position: relative;
+  margin-top: 10%;
 }
 
-#messageForm {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
+.chat {
+  width: 80%;
+  padding: 1rem;
+  height: 100%;
+}
+
+.rooms {
+  width: 10%;
+}
+
+#messageForm {x
+  height: 25%;
+}
+
+.users_chats {
+  background-color: rgba(255,255,255, .6);
+  height: 75%;
+  margin: 0;
+  overflow: scroll;
+  padding-left: .5rem;
+}
+
+.list-group li:before {
+    content: "•"; /* Insert content that looks like bullets */
+    padding-right: 8px;
+    color: #2ED422; /* Or a color you prefer */
+}
+
+.list-group {
+  padding-left: .5rem;
+  margin: 0;
+  /* text-align: center; */
+  margin-top: .5rem;
+}
+
+li span {
+  font-weight: bold;
+  color: black;
 }
 
 #message {
   padding: 0.75rem 1rem;
   background: none;
-  border: 0;
   margin: auto;
   background: #fff;
   font-weight: bold;
+  margin-top: .5rem;
   width: 100%;
-  max-height: max-content;
-  min-height: 5rem;
   outline: none;
+  margin-bottom: 1rem;
 }
 
 .btn {
-  height: 100%;
-  width: 100%;
   background-color: white;
-  padding: 1rem!important;
+  width: 100%;
+  text-align: center;
 }
 
 .btn span {
@@ -50,25 +78,10 @@
 }
 
 .active {
-  width: 25%;
-  height: 90%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  margin: 2rem;
+  width: 20%;
+  background-color: rgba(255,255,255, .6);
 }
 
-.active section:first-of-type {
-  width: 6rem;
-  height: 100%;
-  overflow: scroll;
-  background-color: rgb(185,208,229);
-}
-
-.active section:last-of-type {
-  height: 100%;
-  width: 100%;
-  overflow: scroll;
-  background-color: rgb(215,242,254);
+ul {
+  list-style: none;
 }

@@ -12,7 +12,6 @@ const bodyParser = require('body-parser');
 const users = []
 const connections = []
 
-// where to find all static files
 app.use(express.static(path.resolve(__dirname, '../client/build')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -23,13 +22,17 @@ app.use(function(req, res, next) {
 })
 
 // receiving the fetch call from the login on the front end
-const user = ''
-// app.post('/login', (req, res) => {
-//   user = req.body.username
-//   console.log(req.body.username)
-//   // Add to database  or see if exists already
-//     res.send(user)
-// })
+
+var user = ''
+app.post('/login', (req, res) => {
+  user = req.body
+  console.log(req.body.username)
+  // Add to database  or see if exists already
+  db.addUser(req.body.username, req.body.password)
+  db.createReference(1, req.body.username)
+
+  res.send(user)
+})
 
 // always server index.html from any route
 app.get('*', function(request, response) {
@@ -38,18 +41,34 @@ app.get('*', function(request, response) {
 
 const updateUserNames = () => {
   io.emit('get users', users)
-  console.log(users)
+  // console.log(users)
 }
 
 io.on('connection', socket => {
   connections.push(socket)
   console.log('connected: %s sockets connected', connections.length)
 
+  var room = db.viewChatroom(1)
+  console.log(room)
+
+  // this is not giving me what i expect. i want the room back.
+  // its currently returning Promise { <pending> }
+
+  io.emit('new room', room)
+
   socket.on('send message', data => {
-    db.storeMessage(data.message, data.username, data.chatroom)
-    console.log('saved message information:', data)
+    console.log('look here', data)
+    // db.storeMessage(data.message, data.username, data.chatroom)
     io.emit('new message', data)
+
+
+
+    // socket.broadcast.emit('new message', data)
+    // console.log(data)
+
   })
+
+
 
   socket.on('new user', (userName, callback) => {
     console.log(userName)
@@ -65,6 +84,7 @@ io.on('connection', socket => {
     updateUserNames()
     connections.splice(connections.indexOf(socket), 1)
     console.log('disconnected: %s sockets connected', connections.length)
+    socket.broadcast.to(socket.chatroom).emit('user disconnect', name);
   })
 })
 

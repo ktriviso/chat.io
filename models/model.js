@@ -4,12 +4,12 @@ module.exports = {
 
   // add new user
   // handles the submit from register form
-  addUser(username, image, name, email, password){
+  addUser(username, password){
     return db.one(`
-      INSERT INTO users (username, image, name, email, password)
-      VALUES ($/username/, $/image/, $/name/, $/email/, $/password/)
+      INSERT INTO users (username, password)
+      VALUES ($1, $2)
       RETURNING *
-    `, user);
+    `, [username, password]);
   },
 
   // get one existing user
@@ -23,12 +23,12 @@ module.exports = {
   },
 
   // creates a reference between users, chatroom, messages
-  createReference(chatroom_id, user_id, message_id){
+  createReference(chatroom_id, username){
     return db.one(`
-      INSERT INTO reference (chatroom_id, user_id, message_id)
-      VALUES($/chatroom_id/, $/user_id/, $/message_id/)
+      INSERT INTO reference (chatroom_id, username)
+      VALUES($1, $2)
       RETURNING *
-    `);
+    `, [chatroom_id, username]);
   },
 
   // get all from selected chatroom
@@ -36,21 +36,20 @@ module.exports = {
     return db.many(`
       SELECT *
       FROM reference
-      JOIN users ON (reference.user_id = users.user_id)
+      JOIN users ON (reference.username = users.username)
       JOIN chatroom ON (reference.chatroom_id = chatroom.chatroom_id)
-      JOIN messages ON (reference.message_id = message.message_id)
       WHERE chatroom_id = $1
     `, chatroom_id);
   },
-
-  deleteReference(user_id, chatroom_id, message_id){
-    return db.none(`
-      DELETE FROM reference
-      WHERE user_id = $1 AND
-      WHERE chatroom_id = $2 AND
-      WHERE message_id = $3
-    `, [user_id, chatroom_id, message_id])
-  },
+  //
+  // deleteReference(user_id, chatroom_id, message_id){
+  //   return db.none(`
+  //     DELETE FROM reference
+  //     WHERE user_id = $1 AND
+  //     WHERE chatroom_id = $2 AND
+  //     WHERE message_id = $3
+  //   `, [user_id, chatroom_id, message_id])
+  // },
 
   // handle submit messages in any chatroom
   storeMessage(content, name, chatroom){
@@ -74,7 +73,7 @@ module.exports = {
   deleteMessage(message_id){
     return db.none(`
       DELETE FROM messages
-      WHERE message_id = $/message_id/
+      WHERE message_id = $1
     `, message_id);
   },
 
@@ -82,9 +81,16 @@ module.exports = {
   createChatroom(name) {
     return db.one(`
       INSERT INTO chatroom (name)
-      VALUES ($/name/)
+      VALUES ($1)
       RETURNING *
     `, name);
   },
+
+  viewChatroom(id) {
+    return db.one(`
+      SELECT * from chatroom
+      WHERE chatroom_id = $1
+    `, id)
+  }
 
 }

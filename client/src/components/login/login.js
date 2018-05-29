@@ -42,7 +42,8 @@ export default class Login extends Component {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          username: this.state.userName
+          username: this.state.userName,
+          password: this.state.password,
         })
     })
     .then(res => {
@@ -52,7 +53,7 @@ export default class Login extends Component {
 
     })
     .catch(err => console.log(err))
-    
+
     this.props.history.push(`/chat/`);
   }
 

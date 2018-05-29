@@ -4,11 +4,10 @@ import Header from '../header/header'
 import './chat.css'
 
 class Chat extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       message: '',
-      allChats: [],
       users: []
     }
   }
@@ -17,21 +16,24 @@ class Chat extends Component {
     This method emits a socket.io event to the backend
     Node + Express server
   */
+  componentDidMount(){
+    const username = localStorage.getItem('userName')
+    console.log(this.state.users)
+    this.setState({ users: [...this.state.users, username] })
+
+  }
+
   sendMessage = e => {
     e.preventDefault()
-    console.log(e)
-    const { message, allChats } = this.state
+
+    const { message } = this.state
     const data = {
       message: message,
       username: localStorage.getItem('userName'),
       chatroom: 'main'
     }
     socket.emit('send message', data)
-    let newChats = allChats
-    newChats.push(message)
-    this.setState({
-      allChats: newChats
-    })
+
   }
 
   updateMessage = e => {
@@ -47,39 +49,56 @@ class Chat extends Component {
     /*
       Waits to hear the response from the server
     */
+
     socket.on('new message', function(msg) {
       console.log('im the message: ', msg)
+      const users_chats = document.querySelector('.users_chats')
+      const li = document.createElement("li");
+      users_chats.appendChild(li)
+      li.innerHTML = `<span>${msg.username}</span>  ${msg.message}`
+    })
 
+    // this isnt working because whats being sent server side is incorrect
+    socket.on('new room', function(room) {
+      console.log('im the room', room)
+    })
 
-      // const ul = document.getElementById("users_chats");
-      // const li = document.createElement("li");
-      // li.appendChild(document.createTextNode(message));
-      // console.log(this.state.allChats)
-      // chat = this.state.allChats.forEach(elem => {
-      //   return <li>elem</li>
-      // })
+    var user
+    socket.on('get users', function(users) {
+      console.log('im the user', users)
+      const list_group = document.querySelector('.list-group')
+      const li = document.createElement("li")
+      list_group.appendChild(li)
+      users.forEach(elem => {
+        console.log(elem.userName)
+        li.innerHTML = elem.userName
+      })
     })
 
 
     return (
       <div>
         <Header />
+
+
+        <div className="chat_component">
+        <div className="rooms"></div>
         <div className="active">
           <section></section>
           <section>
             <h3>online users</h3>
-            <ul className="list-group" id="users" />
+            <ul className="list-group" id="users"></ul>
           </section>
         </div>
-
-        <div className="chat_component">
+        <div className="chat">
           <ul className="users_chats">
-            <li>{this.state.allChats}</li>
+
           </ul>
           <form className="" id="messageForm" onSubmit={this.sendMessage}>
             <textarea id="message" value={this.state.message} onChange={this.updateMessage} />
             <button className="btn" type="submit"><span>Send Message</span></button>
           </form>
+        </div>
         </div>
 
       </div>
