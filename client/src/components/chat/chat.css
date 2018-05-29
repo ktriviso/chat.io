@@ -16,8 +16,31 @@
   height: 100%;
 }
 
+h3 {
+  text-align: center;
+}
+
 .rooms {
   width: 10%;
+}
+
+.rooms span {
+  position: absolute;
+  bottom: 0;
+  margin-left: 1rem;
+  font-size: 2rem;
+  border-radius: 50%;
+  padding: 0 .5rem 0 .5rem;
+  margin-bottom: 1rem;
+  background-color: #d7f2fe;
+  border: 1px solid #d7f2fe;
+  color: white;
+}
+
+.rooms span:hover {
+  background-color: white;
+  color: #d7f2fe;
+  border: 1px solid white;
 }
 
 #messageForm {x
@@ -41,7 +64,6 @@
 .list-group {
   padding-left: .5rem;
   margin: 0;
-  /* text-align: center; */
   margin-top: .5rem;
 }
 

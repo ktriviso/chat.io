@@ -82,9 +82,10 @@ class Chat extends Component {
 
 
         <div className="chat_component">
-        <div className="rooms"></div>
+        <div className="rooms">
+          <span>+</span>
+        </div>
         <div className="active">
-          <section></section>
           <section>
             <h3>online users</h3>
             <ul className="list-group" id="users"></ul>
