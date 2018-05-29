@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import socket from '../../socket/api'
 import { Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import './login.css'
 
 export default class Login extends Component {
@@ -10,6 +11,12 @@ export default class Login extends Component {
       userName: '',
       password: ''
     }
+  }
+
+  componentDidMount(){
+    socket.on('new user', function(user) {
+      console.log('new user here', user)
+    })
   }
 
   submitLogin = e => {
@@ -57,22 +64,24 @@ export default class Login extends Component {
     this.props.history.push(`/chat/`);
   }
 
+
+
   render() {
     const { userName, password } = this.state
 
-    socket.on('new user', function(user) {
-      console.log('new user here', user)
-    })
+
 
     return (
       <div id="userFormArea">
-        <form id="userForm" onSubmit={this.submitLogin}>
-          <input type="text" value={userName} onChange={this.userNameInput} placeholder="username" />
+      <h1>Login Here</h1>
+        <form id="userForm" onSubmit={this.submitLogin.bind(this)}>
+          <input type="text" value={userName} onChange={this.userNameInput.bind(this)} placeholder="username" />
           <br />
-          <input type="text" value={password} onChange={this.passwordInput} placeholder="password" />
+          <input type="text" value={password} onChange={this.passwordInput.bind(this)} placeholder="password" />
           <br />
-          <button  type="submit">Submit</button>
+          <button className="btn" type="submit"><span>Sign Up</span></button>
         </form>
+        <p><Link to="/register"><li>Not a member? Register Here</li></Link></p>
       </div>
     )
   }

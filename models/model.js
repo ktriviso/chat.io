@@ -14,12 +14,12 @@ module.exports = {
 
   // get one existing user
   // for the profile page and login
-  getUser(user_id){
+  getUser(username){
     return db.one(`
       SELECT *
       FROM users
-      WHERE user_id = $1
-    `, user_id);
+      WHERE username = $1
+    `, username);
   },
 
   // creates a reference between users, chatroom, messages
@@ -59,23 +59,23 @@ module.exports = {
       RETURNING *
     `, [content, name, chatroom]);
   },
-
-  editMessage(message_id, content){
-    return db.one(`
-      UPDATE messages
-      SET
-      content = $2
-      WHERE message_id = $1
-      RETURNING *
-    `, [message_id, content]);
-  },
-
-  deleteMessage(message_id){
-    return db.none(`
-      DELETE FROM messages
-      WHERE message_id = $1
-    `, message_id);
-  },
+  //
+  // editMessage(message_id, content){
+  //   return db.one(`
+  //     UPDATE messages
+  //     SET
+  //     content = $2
+  //     WHERE message_id = $1
+  //     RETURNING *
+  //   `, [message_id, content]);
+  // },
+  //
+  // deleteMessage(message_id){
+  //   return db.none(`
+  //     DELETE FROM messages
+  //     WHERE message_id = $1
+  //   `, message_id);
+  // },
 
   // create chatroom
   createChatroom(name) {

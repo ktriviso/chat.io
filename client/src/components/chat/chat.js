@@ -8,7 +8,8 @@ class Chat extends Component {
     super(props)
     this.state = {
       message: '',
-      users: []
+      users: [],
+      room: ''
     }
   }
 
@@ -21,12 +22,49 @@ class Chat extends Component {
     console.log(this.state.users)
     this.setState({ users: [...this.state.users, username] })
 
+
+    const { message } = this.state
+
+    /*
+      Waits to hear the response from the server
+    */
+
+    socket.on('new message', function(msg) {
+      console.log('im the message: ', msg)
+      const users_chats = document.querySelector('.users_chats')
+      const li = document.createElement("li");
+      users_chats.appendChild(li)
+      li.innerHTML = `<span>${msg.username}</span>  ${msg.message}`
+    })
+
+    const _this = this
+    socket.on('new room', function(room) {
+      console.log('im the room', room)
+      _this.setState({
+        room: room.name
+      })
+    })
+
+    var user
+    socket.on('get users', function(users) {
+      console.log('im the user', users)
+      const list_group = document.querySelector('.list-group')
+      const li = document.createElement("li")
+      list_group.appendChild(li)
+      users.forEach(elem => {
+        console.log(elem.userName)
+        li.innerHTML = elem.userName
+      })
+    })
+
+
   }
 
   sendMessage = e => {
     e.preventDefault()
 
     const { message } = this.state
+
     const data = {
       message: message,
       username: localStorage.getItem('userName'),
@@ -44,36 +82,6 @@ class Chat extends Component {
   }
 
   render() {
-    const { message } = this.state
-
-    /*
-      Waits to hear the response from the server
-    */
-
-    socket.on('new message', function(msg) {
-      console.log('im the message: ', msg)
-      const users_chats = document.querySelector('.users_chats')
-      const li = document.createElement("li");
-      users_chats.appendChild(li)
-      li.innerHTML = `<span>${msg.username}</span>  ${msg.message}`
-    })
-
-    // this isnt working because whats being sent server side is incorrect
-    socket.on('new room', function(room) {
-      console.log('im the room', room)
-    })
-
-    var user
-    socket.on('get users', function(users) {
-      console.log('im the user', users)
-      const list_group = document.querySelector('.list-group')
-      const li = document.createElement("li")
-      list_group.appendChild(li)
-      users.forEach(elem => {
-        console.log(elem.userName)
-        li.innerHTML = elem.userName
-      })
-    })
 
 
     return (
@@ -83,6 +91,7 @@ class Chat extends Component {
 
         <div className="chat_component">
         <div className="rooms">
+        {this.state.room}
           <span>+</span>
         </div>
         <div className="active">

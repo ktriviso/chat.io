@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../header/userHeader';
+import { Link } from 'react-router-dom'
 import './profile.css';
 
 class App extends Component {
@@ -15,7 +16,7 @@ class App extends Component {
             <li>Edit profile picture</li>
             <li>Edit Username</li>
             <li>Update password</li>
-            <li>Go to Chatroom</li>
+            <Link to="/chat"><li>Go to Chatroom</li></Link>
           </ul>
         </div>
       </div>
