@@ -50,10 +50,8 @@ io.on('connection', socket => {
 
   var room = db.viewChatroom(1)
   console.log(room)
-
   // this is not giving me what i expect. i want the room back.
   // its currently returning Promise { <pending> }
-
   io.emit('new room', room)
 
   socket.on('send message', data => {

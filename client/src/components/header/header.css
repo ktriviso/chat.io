@@ -1,6 +1,11 @@
 a:hover,
 a:focus, .fa {
-	color: #fff;
+	color: #d7f2fe;
+}
+
+a {
+	text-decoration: none;
+	color: white;
 }
 
 

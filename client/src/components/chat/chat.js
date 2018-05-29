@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import socket from '../../socket/api'
-import Header from '../header/header'
+import Header from '../header/userHeader'
 import './chat.css'
 
 class Chat extends Component {

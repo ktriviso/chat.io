@@ -1,0 +1,27 @@
+.profile {
+  height: 70vh;
+  width: 60vw;
+  display: block;
+  margin: auto;
+  background-color: rgba(255,255,255,.5);
+  margin-top: 10%;
+  color: white;
+  text-align: center;
+}
+
+.profile img {
+  height: 150px;
+  width: 150px;
+  border: 1px solid white;
+}
+
+h1 {
+  font-size: 3em;
+  padding-top: 2rem;
+  margin: 0;
+  line-height: .5rem;
+}
+
+h3 {
+  font-weight: 400;
+}
