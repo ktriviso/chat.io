@@ -12,7 +12,10 @@ body {
 	background-image: url(/img/cool-background.svg);
 	background-size: cover;
 	background-repeat: no-repeat;
+	height: 100vh;
+	overflow: hidden;
 }
+
 .App {
 	height: 100vh;
 	display: flex;

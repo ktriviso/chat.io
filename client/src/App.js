@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
-// import { BrowserRouter, Route } from 'react-router-dom'
-import Header from './components/header/header'
+import { Route, Switch } from 'react-router-dom'
+import Login from './components/login/login'
+import Profile from './components/profile/profile'
 import Chat from './components/chat/chat'
+import Register from './components/register/register'
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-        <div className="App">
-          <Header />
-          <Chat />
-        </div>
+      <div>
+        <Switch>
+          <Route exact path='/profile' component={Profile} />
+          <Route exact path='/chat' component={Chat} />
+          <Route exact path='/register' component={Register} />
+          <Route exact path='/' component={Login} />
+        </Switch>
+      </div>
     )
   }
 }

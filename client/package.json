@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "animejs": "^2.0.2",
+    "axios": "^0.18.0",
     "charming": "^2.0.1",
     "desandro-classie": "^1.0.1",
     "enquire.js": "^2.1.6",

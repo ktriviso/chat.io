@@ -1,0 +1,11 @@
+#userFormArea {
+  height: 60vh;
+  width: 30vw;
+  display: block;
+  margin: auto;
+  background-color: rgba(255,255,255,.5);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

@@ -5,14 +5,31 @@ const http = require('http')
 const app = express()
 const server = http.createServer(app)
 const io = socketIO(server)
-
+const router = './router'
 const db = require('./models/model');
+const bodyParser = require('body-parser');
 
 const users = []
 const connections = []
 
 // where to find all static files
 app.use(express.static(path.resolve(__dirname, '../client/build')))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Cache-Control', 'no-cache')
+  next()
+})
+
+// receiving the fetch call from the login on the front end
+const user = ''
+// app.post('/login', (req, res) => {
+//   user = req.body.username
+//   console.log(req.body.username)
+//   // Add to database  or see if exists already
+//     res.send(user)
+// })
 
 // always server index.html from any route
 app.get('*', function(request, response) {
@@ -28,11 +45,10 @@ io.on('connection', socket => {
   connections.push(socket)
   console.log('connected: %s sockets connected', connections.length)
 
-  socket.on('send message', msg => {
-
-    db.storeMessage(msg)
-    console.log('Message:', msg)
-    io.emit('new message', msg)
+  socket.on('send message', data => {
+    db.storeMessage(data.message, data.username, data.chatroom)
+    console.log('saved message information:', data)
+    io.emit('new message', data)
   })
 
   socket.on('new user', (userName, callback) => {

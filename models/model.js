@@ -53,11 +53,12 @@ module.exports = {
   },
 
   // handle submit messages in any chatroom
-  storeMessage(message){
+  storeMessage(content, name, chatroom){
     return db.one(`
-      INSERT INTO messages (content) VALUES ($/message/)
+      INSERT INTO messages (content, name, chatroom)
+      VALUES ($1, $2, $3)
       RETURNING *
-    `, message);
+    `, [content, name, chatroom]);
   },
 
   editMessage(message_id, content){
