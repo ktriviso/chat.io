@@ -8,47 +8,36 @@ class Chat extends Component {
     super(props)
     this.state = {
       message: '',
-      users: [],
       room: '',
       currentUser: this.props.history.location.state.data
     }
   }
 
-  /*
-    This method emits a socket.io event to the backend
-    Node + Express server
-  */
   componentDidMount(){
-    console.log(this.props.history.location.state.data)
+    // i needed a way to get the current user, but the state kept getting overridden by the most recently added users: console.log(this.props.history.location.state.data)
     const _this = this
     const { message } = this.state
 
-    // gets all the users and sets this.state.users
-    socket.on('get users', function(users) {
-      console.log(users)
-      _this.setState({ users: [..._this.state.users, users] })
-      console.log(_this.state.users)
-    })
+    // gets all the users and sets this.state.users but im not actually using this
+    // socket.on('get users', function(users) {
+    //   // _this.setState({ users: [..._this.state.users, users] })
+    // })
 
     // this appends user names to the active tab
     socket.on('new user added', function(user){
-      console.log(user)
       const list_group = document.querySelector('.list-group')
       const li = document.createElement("li")
       li.innerHTML = user
       list_group.appendChild(li)
     })
 
-
     socket.on('new message', function(msg) {
       console.log('im the message: ', msg)
       const users_chats = document.querySelector('.users_chats')
       const li = document.createElement("li");
-      console.log(_this.state.currentUser)
       li.innerHTML = `<span>${msg.username}</span>  ${msg.message}`
       users_chats.appendChild(li)
     })
-
 
     socket.on('new room', function(room) {
       console.log('im the room', room)
@@ -60,16 +49,13 @@ class Chat extends Component {
 
   sendMessage = e => {
     e.preventDefault()
-
     const { message, currentUser } = this.state
-    console.log(currentUser)
     const data = {
       message: message,
       username: currentUser,
       chatroom: 'main'
     }
     socket.emit('send message', data)
-
   }
 
   updateMessage = e => {
@@ -81,11 +67,9 @@ class Chat extends Component {
 
   render() {
 
-
     return (
       <div>
         <Header />
-
 
         <div className="chat_component">
         <div className="rooms">
@@ -115,49 +99,3 @@ class Chat extends Component {
 }
 
 export default Chat
-
-// <div className="messages" />
-// <div className="chat" id="chat" />
-
-// <script>
-//     $(function() {
-//       var socket = io.connect();
-//       var messageForm = $('#messageForm')
-//       var message = $('#message')
-//       var chat = $('#chat')
-//       var chatArea = $('#chatArea')
-//       var userFormArea = $('#userFormArea')
-//       var userForm = $('#userForm')
-//       var users = $('#users')
-//       var username = $('#username')
-
-//       messageForm.submit(function(e) {
-//         e.preventDefault()
-//         socket.emit('send message', message.val())
-//         message.val('')
-//       })
-
-//       socket.on('new message', function(data) {
-//         chat.append('<div class="well"><strong>' + data.user + '</strong>' + data.msg + '</div>')
-//       })
-
-//       userForm.submit(function(e) {
-//         e.preventDefault()
-//         socket.emit('new user', username.val(), function(data) {
-//           if (data) {
-//             userFormArea.hide()
-//             chatArea.show()
-//           }
-//         })
-//         username.val('')
-//       })
-
-//       socket.on('get users', function(data) {
-//         var html = '';
-//         for (i = 0; i < data.length; i++) {
-//           html += '<li>' + data[i] + '</li>'
-//         }
-//         users.html(html)
-//       })
-//     })
-//   </script>

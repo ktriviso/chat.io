@@ -40,11 +40,11 @@ app.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'))
 })
 
-const updateUserNames = () => {
-  io.emit('get users', users)
-  console.log(users)
-  console.log('checking shit')
-}
+// const updateUserNames = () => {
+//   io.emit('get users', users)
+//   console.log(users)
+//   console.log('checking shit')
+// }
 
 io.on('connection', socket => {
   connections.push(socket)
@@ -56,14 +56,12 @@ io.on('connection', socket => {
   })
 
   socket.on('new user', (user, callback) => {
-    console.log(user, ' im the username')
     callback(true, user)
     username = user.userName
-    console.log(username, ' me')
     users.push(username)
     currentUser = username
     io.emit('new user added', username)
-    updateUserNames()
+    // updateUserNames()
   })
 
   socket.on('send message', data => {

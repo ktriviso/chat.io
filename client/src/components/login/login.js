@@ -13,12 +13,6 @@ export default class Login extends Component {
     }
   }
 
-  componentDidMount(){
-    // socket.on('new user', function(user) {
-    //   console.log('new user here', user)
-    // })
-  }
-
   submitLogin = e => {
     e.preventDefault()
     const { userName, password } = this.state
@@ -42,10 +36,6 @@ export default class Login extends Component {
   }
 
   socketCallback = userLoggedIn => {
-    console.log(userLoggedIn)
-    console.log(this.state)
-    // if the user is logged in, set localStorage
-    // send to the backend, sever.js does not have access to the url or localStorage
     fetch('/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -65,12 +55,8 @@ export default class Login extends Component {
     });
   }
 
-
-
   render() {
     const { userName, password } = this.state
-
-
 
     return (
       <div id="userFormArea">
