@@ -1,24 +1,36 @@
 import React, { Component } from 'react'
 import socket from '../../socket/api'
-import { Redirect } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import './login.css'
+import { Redirect, Route, Router } from 'react-router-dom'
 
-export default class Login extends Component {
+// import './register.css'
+
+export default class Register extends Component {
   constructor(props) {
     super(props)
     this.state = {
       userName: '',
       password: ''
     }
+
+    this.submitLogin = this.submitLogin.bind(this)
   }
 
-  submitLogin = e => {
+  // sending the server to check for the user in the db
+  submitLogin = (e) => {
     e.preventDefault()
     const { userName, password } = this.state
-    localStorage.setItem('userName', this.state.userName);
-    localStorage.setItem('password', this.state.password);
-    socket.emit('new user', { userName, password }, this.socketCallback)
+    socket.emit('check user', { userName, password })
+    socket.on('auth', function(user){
+      if(user !== 'Null'){
+        console.log(user, ' you are logged in')
+        // this.props.history.push({
+        //   pathname: `/chat`,
+        //   state: { data: this.state.userName }
+        // });
+
+        // window.location = '/chat'
+      }
+    })
   }
 
   userNameInput = e => {
@@ -35,26 +47,6 @@ export default class Login extends Component {
     })
   }
 
-  socketCallback = userLoggedIn => {
-    fetch('/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          username: this.state.userName,
-          password: this.state.password,
-        })
-    })
-    .then(res => {
-       console.log(res.status)
-    })
-    .catch(err => console.log(err))
-
-    this.props.history.push({
-      pathname: `/chat/`,
-      state: { data: this.state.userName }
-    });
-  }
-
   render() {
     const { userName, password } = this.state
 
@@ -68,7 +60,6 @@ export default class Login extends Component {
           <br />
           <button className="btn" type="submit"><span>Sign Up</span></button>
         </form>
-        <p><Link to="/register"><li>Not a member? Register Here</li></Link></p>
       </div>
     )
   }

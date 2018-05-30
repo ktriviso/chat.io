@@ -14,12 +14,13 @@ module.exports = {
 
   // get one existing user
   // for the profile page and login
-  getUser(username){
+  getUser(username, password){
     return db.one(`
       SELECT *
       FROM users
-      WHERE username = $1
-    `, username);
+      WHERE username=$1
+      AND password=$2
+    `, [username, password]);
   },
 
   // creates a reference between users, chatroom, messages

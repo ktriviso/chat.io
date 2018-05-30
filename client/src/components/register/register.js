@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import socket from '../../socket/api'
 import { Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import './register.css'
 
-export default class Login extends Component {
+export default class Register extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -15,6 +16,8 @@ export default class Login extends Component {
   submitLogin = e => {
     e.preventDefault()
     const { userName, password } = this.state
+    localStorage.setItem('userName', this.state.userName);
+    localStorage.setItem('password', this.state.password);
     socket.emit('new user', { userName, password }, this.socketCallback)
   }
 
@@ -33,12 +36,7 @@ export default class Login extends Component {
   }
 
   socketCallback = userLoggedIn => {
-    console.log(userLoggedIn)
-    // if the user is logged in, set localStorage
-    localStorage.setItem('userName', this.state.userName);
-    localStorage.setItem('password', this.state.password);
-    // send to the backend, sever.js does not have access to the url or localStorage
-    fetch('/login', {
+    fetch('/register', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -47,34 +45,30 @@ export default class Login extends Component {
         })
     })
     .then(res => {
-       console.log(res)
-       const user = res
-       console.log(user)
-
+       console.log(res.status)
     })
     .catch(err => console.log(err))
 
-    this.props.history.push(`/chat/`);
+    this.props.history.push({
+      pathname: `/chat`,
+      state: { data: this.state.userName }
+    });
   }
 
   render() {
     const { userName, password } = this.state
 
-    socket.on('new user', function(user) {
-      console.log('new user here', user)
-    })
-
     return (
       <div id="userFormArea">
       <h1>Login Here</h1>
-        <form id="userForm" onSubmit={this.submitLogin}>
-          <input type="text" value={userName} onChange={this.userNameInput} placeholder="username" />
+        <form id="userForm" onSubmit={this.submitLogin.bind(this)}>
+          <input type="text" value={userName} onChange={this.userNameInput.bind(this)} placeholder="username" />
           <br />
-          <input type="text" value={password} onChange={this.passwordInput} placeholder="password" />
+          <input type="text" value={password} onChange={this.passwordInput.bind(this)} placeholder="password" />
           <br />
           <button className="btn" type="submit"><span>Sign Up</span></button>
         </form>
-        <p><Link to="/register"><li>Not a member? Register Here</li></Link></p>
+        <p><Link to="/login"><li>Already a member? Login Here</li></Link></p>
       </div>
     )
   }

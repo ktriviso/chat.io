@@ -25,7 +25,7 @@ app.use(function(req, res, next) {
 // receiving the fetch call from the login on the front end
 
 
-app.post('/login', (req, res) => {
+app.post('/register', (req, res) => {
   let user = req.body
   console.log(req.body.username)
   // Add to database  or see if exists already
@@ -60,8 +60,24 @@ io.on('connection', socket => {
     username = user.userName
     users.push(username)
     currentUser = username
+    console.log(user)
+    io.emit('user profile', user)
     io.emit('new user added', username)
     // updateUserNames()
+  })
+
+  socket.on('check user', (data) => {
+    console.log('chceking me')
+    console.log(data)
+    db.getUser(data.userName, data.password)
+      .then((user) => {
+        io.emit('auth', user)
+      })
+      .catch((err) => {
+        io.emit('auth' , null)
+      })
+
+    // io.emit('auth', db.getUser(data.userName, data.password))
   })
 
   socket.on('send message', data => {

@@ -34,7 +34,7 @@ h3 {
   background-color: #d7f2fe;
   border: 1px solid #d7f2fe;
   color: white;
-  margin-left: 1rem;
+  margin-left: -1rem;
 }
 
 .rooms span:hover {

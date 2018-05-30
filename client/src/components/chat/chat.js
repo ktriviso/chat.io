@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import socket from '../../socket/api'
 import Header from '../header/userHeader'
+import NewRoom from '../room/newRoom'
 import './chat.css'
 
 class Chat extends Component {
@@ -9,6 +10,7 @@ class Chat extends Component {
     this.state = {
       message: '',
       room: '',
+      isModalOpen: false,
       currentUser: this.props.history.location.state.data
     }
   }
@@ -37,6 +39,8 @@ class Chat extends Component {
       const li = document.createElement("li");
       li.innerHTML = `<span>${msg.username}</span>  ${msg.message}`
       users_chats.appendChild(li)
+      document.querySelector("#message").value=''
+      document.querySelector("#message").focus()
     })
 
     socket.on('new room', function(room) {
@@ -74,7 +78,7 @@ class Chat extends Component {
         <div className="chat_component">
         <div className="rooms">
         {this.state.room}
-          <span>+</span>
+          <span><NewRoom /></span>
         </div>
         <div className="active">
           <section>
