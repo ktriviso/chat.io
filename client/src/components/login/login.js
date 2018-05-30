@@ -14,14 +14,16 @@ export default class Login extends Component {
   }
 
   componentDidMount(){
-    socket.on('new user', function(user) {
-      console.log('new user here', user)
-    })
+    // socket.on('new user', function(user) {
+    //   console.log('new user here', user)
+    // })
   }
 
   submitLogin = e => {
     e.preventDefault()
     const { userName, password } = this.state
+    localStorage.setItem('userName', this.state.userName);
+    localStorage.setItem('password', this.state.password);
     socket.emit('new user', { userName, password }, this.socketCallback)
   }
 
@@ -41,9 +43,8 @@ export default class Login extends Component {
 
   socketCallback = userLoggedIn => {
     console.log(userLoggedIn)
+    console.log(this.state)
     // if the user is logged in, set localStorage
-    localStorage.setItem('userName', this.state.userName);
-    localStorage.setItem('password', this.state.password);
     // send to the backend, sever.js does not have access to the url or localStorage
     fetch('/login', {
         method: 'POST',
@@ -54,14 +55,14 @@ export default class Login extends Component {
         })
     })
     .then(res => {
-       console.log(res)
-       const user = res
-       console.log(user)
-
+       console.log(res.status)
     })
     .catch(err => console.log(err))
 
-    this.props.history.push(`/chat/`);
+    this.props.history.push({
+      pathname: `/chat/`,
+      state: { data: this.state.userName }
+    });
   }
 
 

@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 
 const users = []
 const connections = []
+let currentUser = ''
 
 app.use(express.static(path.resolve(__dirname, '../client/build')))
 app.use(bodyParser.json())
@@ -23,9 +24,9 @@ app.use(function(req, res, next) {
 
 // receiving the fetch call from the login on the front end
 
-var user = ''
+
 app.post('/login', (req, res) => {
-  user = req.body
+  let user = req.body
   console.log(req.body.username)
   // Add to database  or see if exists already
   db.addUser(req.body.username, req.body.password)
@@ -42,41 +43,32 @@ app.get('*', function(request, response) {
 const updateUserNames = () => {
   io.emit('get users', users)
   console.log(users)
+  console.log('checking shit')
 }
 
 io.on('connection', socket => {
   connections.push(socket)
   console.log('connected: %s sockets connected', connections.length)
 
-db.viewChatroom(1).then(data => {
-  console.log(data)
-  io.emit('new room', data)
-})
-
-
-  socket.on('send message', data => {
-    console.log('look here', data)
-    // db.storeMessage(data.message, data.username, data.chatroom)
-    // io.emit('new message', data)
-
-
-
-    io.emit('new message', data)
-    // socket.broadcast.emit('new message', data)
-    console.log('sending new message')
-    // console.log(data)
-
+  db.viewChatroom(1).then(data => {
+    console.log(data)
+    io.emit('new room', data)
   })
 
-
-
-  socket.on('new user', (userName, callback) => {
-    console.log(userName)
-    console.log(callback)
-    callback(true)
-    socket.username = userName
-    users.push(socket.username)
+  socket.on('new user', (user, callback) => {
+    console.log(user, ' im the username')
+    callback(true, user)
+    username = user.userName
+    console.log(username, ' me')
+    users.push(username)
+    currentUser = username
+    io.emit('new user added', username)
     updateUserNames()
+  })
+
+  socket.on('send message', data => {
+    db.storeMessage(data.message, data.username, data.chatroom)
+    io.emit('new message', data)
   })
 
   io.on('disconnect', () => {

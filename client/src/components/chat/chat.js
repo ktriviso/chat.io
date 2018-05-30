@@ -9,7 +9,8 @@ class Chat extends Component {
     this.state = {
       message: '',
       users: [],
-      room: ''
+      room: '',
+      currentUser: this.props.history.location.state.data
     }
   }
 
@@ -18,56 +19,53 @@ class Chat extends Component {
     Node + Express server
   */
   componentDidMount(){
-    const username = localStorage.getItem('userName')
-    console.log(this.state.users)
-    this.setState({ users: [...this.state.users, username] })
-
-
+    console.log(this.props.history.location.state.data)
+    const _this = this
     const { message } = this.state
 
-    /*
-      Waits to hear the response from the server
-    */
+    // gets all the users and sets this.state.users
+    socket.on('get users', function(users) {
+      console.log(users)
+      _this.setState({ users: [..._this.state.users, users] })
+      console.log(_this.state.users)
+    })
+
+    // this appends user names to the active tab
+    socket.on('new user added', function(user){
+      console.log(user)
+      const list_group = document.querySelector('.list-group')
+      const li = document.createElement("li")
+      li.innerHTML = user
+      list_group.appendChild(li)
+    })
+
 
     socket.on('new message', function(msg) {
       console.log('im the message: ', msg)
       const users_chats = document.querySelector('.users_chats')
       const li = document.createElement("li");
-      users_chats.appendChild(li)
+      console.log(_this.state.currentUser)
       li.innerHTML = `<span>${msg.username}</span>  ${msg.message}`
+      users_chats.appendChild(li)
     })
 
-    const _this = this
+
     socket.on('new room', function(room) {
       console.log('im the room', room)
       _this.setState({
         room: room.name
       })
     })
-
-    var user
-    socket.on('get users', function(users) {
-      console.log('im the user', users)
-      const list_group = document.querySelector('.list-group')
-      const li = document.createElement("li")
-      list_group.appendChild(li)
-      users.forEach(elem => {
-        console.log(elem.userName)
-        li.innerHTML = elem.userName
-      })
-    })
-
-
   }
 
   sendMessage = e => {
     e.preventDefault()
 
-    const { message } = this.state
-
+    const { message, currentUser } = this.state
+    console.log(currentUser)
     const data = {
       message: message,
-      username: localStorage.getItem('userName'),
+      username: currentUser,
       chatroom: 'main'
     }
     socket.emit('send message', data)

@@ -13,8 +13,8 @@ export default class userHeader extends Component {
       <div>
         <header className="header">
           <ul className='site_nav'>
-            <Link to="/"><li id="logout" onclick={window.localStorage.clear()}>Logout</li></Link>
-            <Link to="/register" onclick={window.localStorage.clear()}><li>Register</li></Link>
+            <Link to="/"><li id="logout" onClick={window.localStorage.clear()}>Logout</li></Link>
+            <Link to="/register" onClick={window.localStorage.clear()}><li>Register</li></Link>
             <Link to="/profile"><li>Profile</li></Link>
           </ul>
         </header>
